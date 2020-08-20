@@ -1,11 +1,17 @@
 import React from "react";
 
-const CurrencyCoverter = () => {
+const CurrencyCoverter = ({ currencyOptions }) => {
   return (
     <div>
       <input type="number" />
       <select>
-        <option value="hi">Hi</option>
+        {currencyOptions.map((option) => {
+          return (
+            <option key={option} value={option}>
+              {option}
+            </option>
+          );
+        })}
       </select>
     </div>
   );
