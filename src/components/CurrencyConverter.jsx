@@ -9,6 +9,15 @@ const CurrencyCoverter = ({
   logSubmission,
   todos,
 }) => {
+  let oldTimeStamp = new Date();
+  let year = oldTimeStamp.getFullYear();
+  let month = oldTimeStamp.getMonth();
+  let day = oldTimeStamp.getDate();
+  let hours = oldTimeStamp.getHours();
+  let minutes = oldTimeStamp.getMinutes();
+  let seconds = oldTimeStamp.getSeconds();
+
+  let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}`;
   return (
     <div>
       <input type="number" value={amount} onChange={onChangeAmount} />
@@ -22,15 +31,16 @@ const CurrencyCoverter = ({
         })}
       </select>
       <button onClick={logSubmission}>Log currency</button>
+      {/* <button>Log currency</button> */}
       {todos &&
         todos.map((todo) => {
           return (
             <ul>
               <li>
-                For every {todo.fromAmount}, {todo.base} you will receive{" "}
-                {todo.newAmount} in {todo.changed}
+                For every {todo.fromAmount}, {todo.original_currency} you will
+                receive {todo.newAmount} in {todo.changed_currency}
               </li>
-              <li>Logged at: {todo.id}</li>
+              <li>Logged at: {newTimeStamp}</li>
             </ul>
           );
         })}
