@@ -12,7 +12,16 @@ function App() {
   const [exchangeRate, setExchangeRate] = useState();
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
-  console.log(exchangeRate);
+  // console.log(exchangeRate);
+
+  let toAmount, fromAmount;
+  if (amountInFromCurrency) {
+    fromAmount = amount;
+    toAmount = amount * exchangeRate;
+  } else {
+    toAmount = amount;
+    fromAmount = amount / exchangeRate;
+  }
 
   // console.log(currencyOptions);
 
@@ -26,6 +35,18 @@ function App() {
     });
   }, []);
 
+  function handleFromAmountChange(event) {
+    setAmount(event.target.value);
+    setAmountInFromCurrency(true);
+    // setLoggedCurrency(event.target.value);
+  }
+  function handleToAmountChange(event) {
+    setAmount(event.target.value);
+    setAmountInFromCurrency(false);
+
+    // setLoggedCurrency(event.target.value);
+  }
+
   return (
     <div>
       <h1>Currency converter</h1>
@@ -33,12 +54,16 @@ function App() {
         currencyOptions={currencyOptions}
         selectedCurrency={fromCurrency}
         onChangeCurrency={(event) => setFromCurrency(event.target.value)}
+        amount={fromAmount}
+        onChangeAmount={handleFromAmountChange}
       />
       <p>=</p>
       <CurrencyConvertor
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
         onChangeCurrency={(event) => setToCurrency(event.target.value)}
+        amount={toAmount}
+        onChangeAmount={handleToAmountChange}
       />
     </div>
   );
