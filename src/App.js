@@ -1,11 +1,14 @@
 import React from "react";
+import CurrencyConvertor from "./components/CurrencyConverter";
 
 import "./App.css";
 
 function App() {
   return (
     <div>
-      <h1>Hello world</h1>
+      <h1>Currency converter</h1>
+      <CurrencyConvertor />
+      <CurrencyConvertor />
     </div>
   );
 }
