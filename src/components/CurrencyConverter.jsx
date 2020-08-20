@@ -1,10 +1,10 @@
 import React from "react";
 
-const CurrencyCoverter = ({ currencyOptions }) => {
+const CurrencyCoverter = ({ currencyOptions, selectedCurrency }) => {
   return (
     <div>
       <input type="number" />
-      <select>
+      <select value={selectedCurrency}>
         {currencyOptions.map((option) => {
           return (
             <option key={option} value={option}>
