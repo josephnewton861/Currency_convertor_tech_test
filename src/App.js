@@ -12,6 +12,7 @@ function App() {
   const [exchangeRate, setExchangeRate] = useState();
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
+  const [todos, setTodos] = useState([]);
   // console.log(exchangeRate);
 
   let toAmount, fromAmount;
@@ -57,6 +58,33 @@ function App() {
     // setLoggedCurrency(event.target.value);
   }
 
+  function handlesNewLog(event) {
+    let oldTimeStamp = new Date();
+
+    let year = oldTimeStamp.getFullYear();
+    let month = oldTimeStamp.getMonth();
+    let day = oldTimeStamp.getDate();
+    let hours = oldTimeStamp.getHours();
+    let minutes = oldTimeStamp.getMinutes();
+    let seconds = oldTimeStamp.getSeconds();
+
+    let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}`;
+
+    event.preventDefault();
+    setTodos([
+      ...todos,
+      {
+        id: newTimeStamp,
+        fromAmount: fromAmount,
+        base: fromCurrency,
+        newAmount: toAmount,
+        changed: toCurrency,
+        // timestamp: new Date(),
+      },
+    ]);
+    // event.target.reset();
+  }
+
   return (
     <div>
       <h1>Currency converter</h1>
@@ -66,6 +94,8 @@ function App() {
         onChangeCurrency={(event) => setFromCurrency(event.target.value)}
         amount={fromAmount}
         onChangeAmount={handleFromAmountChange}
+        logSubmission={handlesNewLog}
+        todos={todos}
       />
       <p>=</p>
       <CurrencyConvertor
@@ -74,6 +104,7 @@ function App() {
         onChangeCurrency={(event) => setToCurrency(event.target.value)}
         amount={toAmount}
         onChangeAmount={handleToAmountChange}
+        logSubmission={handlesNewLog}
       />
     </div>
   );

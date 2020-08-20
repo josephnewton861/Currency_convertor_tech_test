@@ -6,6 +6,8 @@ const CurrencyCoverter = ({
   onChangeCurrency,
   amount,
   onChangeAmount,
+  logSubmission,
+  todos,
 }) => {
   return (
     <div>
@@ -19,6 +21,19 @@ const CurrencyCoverter = ({
           );
         })}
       </select>
+      <button onClick={logSubmission}>Log currency</button>
+      {todos &&
+        todos.map((todo) => {
+          return (
+            <ul>
+              <li>
+                For every {todo.fromAmount}, {todo.base} you will receive{" "}
+                {todo.newAmount} in {todo.changed}
+              </li>
+              <li>Logged at: {todo.id}</li>
+            </ul>
+          );
+        })}
     </div>
   );
 };
