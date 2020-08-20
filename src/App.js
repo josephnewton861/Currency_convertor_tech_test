@@ -35,6 +35,16 @@ function App() {
     });
   }, []);
 
+  useEffect(() => {
+    if (fromCurrency !== null && toCurrency !== null) {
+      axios
+        .get(`${baseURL}?base=${fromCurrency}&symbols=${toCurrency}`)
+        .then(({ data }) => {
+          return setExchangeRate(data.rates[toCurrency]);
+        });
+    }
+  }, [fromCurrency, toCurrency]);
+
   function handleFromAmountChange(event) {
     setAmount(event.target.value);
     setAmountInFromCurrency(true);
