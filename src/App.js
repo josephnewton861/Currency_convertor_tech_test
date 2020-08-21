@@ -103,7 +103,7 @@ function App() {
 
   return (
     <div>
-      <h1>Currency converter</h1>
+      <h1>Currency Converter</h1>
       <FontAwesomeIcon
         className="icon"
         icon={faDollarSign}
