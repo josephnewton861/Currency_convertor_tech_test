@@ -3,7 +3,8 @@ import CurrencyConvertor from "./components/CurrencyConverter";
 import firebase from "./firebase";
 import "./App.css";
 import axios from "axios";
-import { firestore } from "firebase";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
 const baseURL = "https://api.exchangeratesapi.io/latest";
 
@@ -79,9 +80,8 @@ function App() {
     });
   }
 
-  function useLogs(sortBy = "DATE_ASC") {
+  function useLogs(sortBy = "DATE_DESC") {
     const [todos, setTodos] = useState([]);
-    console.log([sortBy]);
 
     useEffect(() => {
       const unsubscribe = firebase
@@ -104,29 +104,26 @@ function App() {
   return (
     <div>
       <h1>Currency converter</h1>
+      <FontAwesomeIcon
+        className="icon"
+        icon={faDollarSign}
+        size="3x"
+      ></FontAwesomeIcon>
       <CurrencyConvertor
         currencyOptions={currencyOptions}
-        selectedCurrency={fromCurrency}
-        onChangeCurrency={(event) => setFromCurrency(event.target.value)}
-        amount={fromAmount}
-        onChangeAmount={handleFromAmountChange}
+        selectedCurrencyFrom={fromCurrency}
+        onChangeCurrencyFrom={(event) => setFromCurrency(event.target.value)}
+        amountFrom={fromAmount}
+        onChangeAmountFrom={handleFromAmountChange}
         logSubmission={handlesNewLog}
         sort={sort_options}
         stateSortBy={setSortBy}
         newSort={sortBy}
-      />
-      <p className="comparison">=</p>
-      <CurrencyConvertor
-        currencyOptions={currencyOptions}
-        selectedCurrency={toCurrency}
-        onChangeCurrency={(event) => setToCurrency(event.target.value)}
-        amount={toAmount}
-        onChangeAmount={handleToAmountChange}
-        logSubmission={handlesNewLog}
         todos={todos}
-        sort={sort_options}
-        stateSortBy={setSortBy}
-        newSort={sortBy}
+        onChangeAmountTo={handleToAmountChange}
+        amountTo={toAmount}
+        onChangeCurrencyTo={(event) => setToCurrency(event.target.value)}
+        selectedCurrencyTo={toCurrency}
       />
     </div>
   );

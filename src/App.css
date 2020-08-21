@@ -4,13 +4,42 @@ body {
   align-items: center;
   text-align: center;
   margin: 0;
+  font-family: "Gill Sans", "Gill Sans MT", Calibri, "Trebuchet MS", sans-serif;
+  background-color: turquoise;
+}
+
+h1 {
+  color: rgb(68, 0, 255);
 }
 
 .comparison {
   font-size: 2rem;
-  margin: 1rem;
+  margin: 0.5rem;
 }
 
 .list {
   list-style: none;
+}
+
+.input {
+  margin: 0.5rem;
+  border-radius: 8%;
+}
+
+button {
+  margin: 0.5rem;
+}
+
+.option {
+  margin: 0.5rem;
+  height: 2.2rem;
+  width: 6.5rem;
+}
+
+.icon {
+  color: gold;
+}
+
+li {
+  font-size: 1.3em;
 }
