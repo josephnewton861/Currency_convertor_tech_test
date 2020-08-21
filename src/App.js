@@ -5,12 +5,12 @@ import "./App.css";
 import axios from "axios";
 import { firestore } from "firebase";
 
-// firebase.firestore().collection("currency").add({
-//   title: "Rubix cube",
-//   time: 45,
-// });
-
 const baseURL = "https://api.exchangeratesapi.io/latest";
+
+const sort_options = {
+  DATE_ASC: { column: "created", direction: "asc" },
+  DATE_DESC: { column: "created", direction: "desc" },
+};
 
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
@@ -19,8 +19,7 @@ function App() {
   const [exchangeRate, setExchangeRate] = useState();
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
-  // const [todos, setTodos] = useState([]);
-  // console.log(exchangeRate);
+  const [sortBy, setSortBy] = useState("DATE_ASC");
 
   let toAmount, fromAmount;
   if (amountInFromCurrency) {
@@ -30,8 +29,6 @@ function App() {
     toAmount = amount;
     fromAmount = amount / exchangeRate;
   }
-
-  // console.log(currencyOptions);
 
   useEffect(() => {
     axios.get(baseURL).then((res) => {
@@ -56,59 +53,41 @@ function App() {
   function handleFromAmountChange(event) {
     setAmount(event.target.value);
     setAmountInFromCurrency(true);
-    // setLoggedCurrency(event.target.value);
   }
   function handleToAmountChange(event) {
     setAmount(event.target.value);
     setAmountInFromCurrency(false);
-
-    // setLoggedCurrency(event.target.value);
   }
 
-  // function handlesNewLog(event) {
-  //   let oldTimeStamp = new Date();
-
-  // let year = oldTimeStamp.getFullYear();
-  // let month = oldTimeStamp.getMonth();
-  // let day = oldTimeStamp.getDate();
-  // let hours = oldTimeStamp.getHours();
-  // let minutes = oldTimeStamp.getMinutes();
-  // let seconds = oldTimeStamp.getSeconds();
-
-  // let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}`;
-
-  //   event.preventDefault();
-  //   setTodos([
-  //     ...todos,
-  //     {
-  //       id: newTimeStamp,
-  //       fromAmount: fromAmount,
-  //       base: fromCurrency,
-  //       newAmount: toAmount,
-  //       changed: toCurrency,
-  //       // timestamp: new Date(),
-  //     },
-  //   ]);
-  //   // event.target.reset();
-  // }
-
   function handlesNewLog(event) {
+    let oldTimeStamp = new Date();
+
+    let year = oldTimeStamp.getFullYear();
+    let month = oldTimeStamp.getMonth();
+    let day = oldTimeStamp.getDate();
+    let hours = oldTimeStamp.getHours();
+    let minutes = oldTimeStamp.getMinutes();
+
+    let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}`;
     event.preventDefault();
     firebase.firestore().collection("currency").add({
       fromAmount,
       toAmount,
       fromCurrency,
       toCurrency,
+      created: newTimeStamp,
     });
   }
 
-  function useLogs() {
+  function useLogs(sortBy = "DATE_ASC") {
     const [todos, setTodos] = useState([]);
+    console.log([sortBy]);
 
     useEffect(() => {
-      firebase
+      const unsubscribe = firebase
         .firestore()
         .collection("currency")
+        .orderBy(sort_options[sortBy].column, sort_options[sortBy].direction)
         .onSnapshot((snapshot) => {
           const newLogs = snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -116,10 +95,11 @@ function App() {
           }));
           setTodos(newLogs);
         });
-    }, []);
+      return () => unsubscribe();
+    }, [sortBy]);
     return todos;
   }
-  const todos = useLogs();
+  const todos = useLogs(sortBy);
 
   return (
     <div>
@@ -131,10 +111,11 @@ function App() {
         amount={fromAmount}
         onChangeAmount={handleFromAmountChange}
         logSubmission={handlesNewLog}
-        // todos={todos}
-        todos={todos}
+        sort={sort_options}
+        stateSortBy={setSortBy}
+        newSort={sortBy}
       />
-      <p>=</p>
+      <p className="comparison">=</p>
       <CurrencyConvertor
         currencyOptions={currencyOptions}
         selectedCurrency={toCurrency}
@@ -143,6 +124,9 @@ function App() {
         onChangeAmount={handleToAmountChange}
         logSubmission={handlesNewLog}
         todos={todos}
+        sort={sort_options}
+        stateSortBy={setSortBy}
+        newSort={sortBy}
       />
     </div>
   );

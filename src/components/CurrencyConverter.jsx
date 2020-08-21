@@ -8,39 +8,45 @@ const CurrencyCoverter = ({
   onChangeAmount,
   logSubmission,
   todos,
+  sort,
+  stateSortBy,
+  newSort,
 }) => {
-  let oldTimeStamp = new Date();
-  let year = oldTimeStamp.getFullYear();
-  let month = oldTimeStamp.getMonth();
-  let day = oldTimeStamp.getDate();
-  let hours = oldTimeStamp.getHours();
-  let minutes = oldTimeStamp.getMinutes();
-  let seconds = oldTimeStamp.getSeconds();
+  //   console.log(sort["DATE_ASC"]);
+  console.log(newSort);
 
-  let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}:${seconds}`;
   return (
     <div>
-      <input type="number" value={amount} onChange={onChangeAmount} />
-      <select value={selectedCurrency} onChange={onChangeCurrency}>
-        {currencyOptions.map((option) => {
-          return (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          );
-        })}
-      </select>
-      <button onClick={logSubmission}>Log currency</button>
-      {/* <button>Log currency</button> */}
+      <form onSubmit={logSubmission}>
+        <input type="number" value={amount} onChange={onChangeAmount} />
+        <select value={selectedCurrency} onChange={onChangeCurrency}>
+          {currencyOptions.map((option) => {
+            return (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            );
+          })}
+        </select>
+        <button onClick={logSubmission}>Log currency</button>
+        <select
+          value={newSort}
+          onChange={(event) => stateSortBy(event.currentTarget.value)}
+        >
+          <option value={sort["DATE_DESC"]}>Date descending</option>
+          <option value={sort["DATE_ASC"]}>Date Ascending</option>
+        </select>
+      </form>
       {todos &&
         todos.map((todo) => {
+          console.log(todo);
           return (
-            <ul>
+            <ul className="list">
               <li>
-                For every {todo.fromAmount}, {todo.original_currency} you will
-                receive {todo.newAmount} in {todo.changed_currency}
+                For every {todo.fromAmount}, {todo.fromCurrency} you will
+                receive {todo.toAmount} in {todo.toCurrency}
               </li>
-              <li>Logged at: {newTimeStamp}</li>
+              <li>Logged at: {todo.created} </li>
             </ul>
           );
         })}
