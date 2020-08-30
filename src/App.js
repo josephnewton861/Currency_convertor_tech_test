@@ -8,11 +8,6 @@ import { faDollarSign } from "@fortawesome/free-solid-svg-icons";
 
 const baseURL = "https://api.exchangeratesapi.io/latest";
 
-const sort_options = {
-  DATE_ASC: { column: "created", direction: "asc" },
-  DATE_DESC: { column: "created", direction: "desc" },
-};
-
 function App() {
   const [currencyOptions, setCurrencyOptions] = useState([]);
   const [fromCurrency, setFromCurrency] = useState();
@@ -20,7 +15,6 @@ function App() {
   const [exchangeRate, setExchangeRate] = useState();
   const [amount, setAmount] = useState(1);
   const [amountInFromCurrency, setAmountInFromCurrency] = useState(true);
-  const [sortBy, setSortBy] = useState("DATE_ASC");
 
   let toAmount, fromAmount;
   if (amountInFromCurrency) {
@@ -70,6 +64,9 @@ function App() {
     let minutes = oldTimeStamp.getMinutes();
 
     let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}`;
+
+    console.log(newTimeStamp);
+
     event.preventDefault();
     firebase.firestore().collection("currency").add({
       fromAmount,
@@ -80,14 +77,13 @@ function App() {
     });
   }
 
-  function useLogs(sortBy = "DATE_DESC") {
-    const [todos, setTodos] = useState([]);
-
+  const [todos, setTodos] = useState([]);
+  function useLogs() {
     useEffect(() => {
       const unsubscribe = firebase
         .firestore()
         .collection("currency")
-        .orderBy(sort_options[sortBy].column, sort_options[sortBy].direction)
+        .orderBy("created", "desc")
         .onSnapshot((snapshot) => {
           const newLogs = snapshot.docs.map((doc) => ({
             id: doc.id,
@@ -96,10 +92,15 @@ function App() {
           setTodos(newLogs);
         });
       return () => unsubscribe();
-    }, [sortBy]);
+    }, []);
     return todos;
   }
-  const todos = useLogs(sortBy);
+  const newTodos = useLogs();
+
+  const onDelete = () => {
+    const db = firebase.firestore();
+    db.collection("currency").doc("id").delete();
+  };
 
   return (
     <div>
@@ -116,14 +117,13 @@ function App() {
         amountFrom={fromAmount}
         onChangeAmountFrom={handleFromAmountChange}
         logSubmission={handlesNewLog}
-        sort={sort_options}
-        stateSortBy={setSortBy}
-        newSort={sortBy}
-        todos={todos}
+        todos={newTodos}
+        setTodos={setTodos}
         onChangeAmountTo={handleToAmountChange}
         amountTo={toAmount}
         onChangeCurrencyTo={(event) => setToCurrency(event.target.value)}
         selectedCurrencyTo={toCurrency}
+        onDelete={onDelete}
       />
     </div>
   );

@@ -12,11 +12,21 @@ const CurrencyCoverter = ({
   onChangeAmountTo,
   logSubmission,
   todos,
-  sort,
-  stateSortBy,
-  newSort,
+  onDelete,
 }) => {
   const [showList, setShowList] = useState(false);
+  const [sortedField, setSortedField] = useState("asc");
+
+  const sorted =
+    todos &&
+    todos.sort((a, b) => {
+      const isReversed = sortedField === "asc" ? 1 : -1;
+      return isReversed * a.created.localeCompare(b.created);
+    });
+
+  const onSort = (sortedField) => {
+    setSortedField(sortedField);
+  };
 
   return (
     <div>
@@ -30,7 +40,7 @@ const CurrencyCoverter = ({
         <select value={selectedCurrencyFrom} onChange={onChangeCurrencyFrom}>
           {currencyOptions.map((option) => {
             return (
-              <option classname="option" key={option} value={option}>
+              <option className="option" key={option} value={option}>
                 {option}
               </option>
             );
@@ -46,7 +56,7 @@ const CurrencyCoverter = ({
         <select value={selectedCurrencyTo} onChange={onChangeCurrencyTo}>
           {currencyOptions.map((option) => {
             return (
-              <option classname="option" key={option} value={option}>
+              <option className="option" key={option} value={option}>
                 {option}
               </option>
             );
@@ -54,27 +64,24 @@ const CurrencyCoverter = ({
         </select>
         <br></br>
         <button onClick={logSubmission}>Log rate</button>
-        <select
-          value={newSort}
-          onChange={(event) => stateSortBy(event.currentTarget.value)}
-        >
-          <option classname="option" value={sort["DATE_DESC"]}>
-            Date descending
-          </option>
-        </select>
       </form>
       <br></br>
+      <button onClick={() => onSort("desc")}>Newest logs</button>
+      <button onClick={() => onSort("asc")}>oldest logs</button>
       <button onClick={() => setShowList(!showList)}>Show previous logs</button>
       {showList &&
         todos &&
-        todos.map((todo) => {
+        sorted.map((todo) => {
+          // console.log(todo.created);
           return (
-            <ul className="list">
+            <ul className="list" key={todo.id}>
               <li>
-                For every {todo.fromAmount}, {todo.fromCurrency} you will
-                receive {todo.toAmount} in {todo.toCurrency}
+                For every {parseFloat(todo.fromAmount).toFixed(3)},{" "}
+                {todo.fromCurrency} you will receive{" "}
+                {parseFloat(todo.toAmount).toFixed(3)} in {todo.toCurrency}
               </li>
               <li>Logged at: {todo.created} </li>
+              <button onClick={onDelete}>Delete log</button>
             </ul>
           );
         })}
