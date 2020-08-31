@@ -97,11 +97,6 @@ function App() {
   }
   const newTodos = useLogs();
 
-  const onDelete = () => {
-    const db = firebase.firestore();
-    db.collection("currency").doc("id").delete();
-  };
-
   return (
     <div>
       <h1>Currency Converter</h1>

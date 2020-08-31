@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+// import firebase from "../firebase";
 
 const CurrencyCoverter = ({
   currencyOptions,
@@ -12,10 +13,16 @@ const CurrencyCoverter = ({
   onChangeAmountTo,
   logSubmission,
   todos,
-  onDelete,
 }) => {
   const [showList, setShowList] = useState(false);
   const [sortedField, setSortedField] = useState("asc");
+
+  const findTodosId = () => {
+    todos.map((todo) => {
+      let id = todo.id;
+      return id;
+    });
+  };
 
   const sorted =
     todos &&
@@ -27,6 +34,11 @@ const CurrencyCoverter = ({
   const onSort = (sortedField) => {
     setSortedField(sortedField);
   };
+
+  // const onDelete = () => {
+  //   const db = firebase.firestore();
+  //   db.collection("currency").doc("id").delete();
+  // };
 
   return (
     <div>
@@ -72,7 +84,6 @@ const CurrencyCoverter = ({
       {showList &&
         todos &&
         sorted.map((todo) => {
-          // console.log(todo.created);
           return (
             <ul className="list" key={todo.id}>
               <li>
@@ -81,7 +92,7 @@ const CurrencyCoverter = ({
                 {parseFloat(todo.toAmount).toFixed(3)} in {todo.toCurrency}
               </li>
               <li>Logged at: {todo.created} </li>
-              <button onClick={onDelete}>Delete log</button>
+              {/* <button onClick={onDelete}>Delete log</button> */}
             </ul>
           );
         })}
