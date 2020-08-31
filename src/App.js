@@ -118,7 +118,6 @@ function App() {
         amountTo={toAmount}
         onChangeCurrencyTo={(event) => setToCurrency(event.target.value)}
         selectedCurrencyTo={toCurrency}
-        onDelete={onDelete}
       />
     </div>
   );
