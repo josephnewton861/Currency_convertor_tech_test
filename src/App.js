@@ -60,10 +60,8 @@ function App() {
     let year = oldTimeStamp.getFullYear();
     let month = oldTimeStamp.getMonth();
     let day = oldTimeStamp.getDate();
-    let hours = oldTimeStamp.getHours();
-    let minutes = oldTimeStamp.getMinutes();
 
-    let newTimeStamp = `${day}/${month}/${year} at ${hours}:${minutes}`;
+    let newTimeStamp = `${day}/${month}/${year}`;
 
     console.log(newTimeStamp);
 
