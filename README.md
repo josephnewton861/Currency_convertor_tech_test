@@ -1,5 +1,7 @@
 # Currency converter App 
 
+## Important: This project is no longer supported
+
 ### Project Overview
 
 #### This project is my attempt at a tech test that was presented to me. It involves building a currency converter. The front-end of the responsive application is built using React, CSS, React Hooks (unused before starting this project), Axios, and a third party API. The backend of the project is built using Firebase and firestore, technologies unencountered before starting this project. Finally the hosting of the application is carried out using Netlify.
